@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Universe Visualizer</title>
+
+<script type="text/javascript">
+
+var v=[],f,s,e,c,r,h=1,l=0,t=!0,a=0;function n(){f=document.getElementById("u");s=f.getContext("2d");delayArea=document.getElementById("d");c=document.getElementById("t");r=document.getElementById("s");d()}
+function i(){var k=document.getElementById("file").files[0],q=new FileReader;q.onload=function(k){var q;try{if(q=JSON.parse(k.target.result).states)document.getElementById("states").value=k.target.result,r.value=q.length,v=q,u();else throw'No "states" key found';}catch(z){alert(z)}};k&&q.readAsText(k)}function o(){if(0!=v.length){for(var k=1,q=v[l].bodies,B=0;B<q.length;B++)for(var A=q[B].pos,z=0;z<A.length;z++)k=Math.max(k,Math.abs(A[z]));q=Math.max(1,Math.min(f.width,f.height));h=k>q?4*k/q:1}}
+function d(){s.clearRect(0,0,f.width,f.height);var k=f.width/2,q=f.height/2;s.strokeStyle="red";s.beginPath();s.moveTo(k-5,q);s.lineTo(k+5,q);s.stroke();s.beginPath();s.moveTo(k,q-5);s.lineTo(k,q+5);s.stroke()}function u(){l=0;m();o();T(l)}function g(){if(!t)if(a=parseInt(delayArea.value),isNaN(a))alert("Delay must be an integer");else{var k=parseInt(r.value);isNaN(k)?alert("Steps must be an integer"):(t=!0,y(k))}}function m(){t&&(t=!1)}
+function y(k){t&&0<k&&l<v.length-1?(l++,x(),setTimeout(function(){y(k-1)},a)):m()}function b(){h*=1.1;x()}function I(){h=Math.max(1E3,h/1.1);x()}function p(){o();x()}function x(){T(l)}function T(k){d();var q=f.width/2,B=f.height/2,A=v[k].bodies;c.value=v[k].time;for(k=0;k<A.length;k++){var z=A[k].pos,C=q+z[0]/h;z=B+z[1]/h;s.beginPath();s.arc(C,z,5,0,2*Math.PI,!1);s.fillStyle="blue";s.fill();s.fillStyle="black";s.textAlign="center";s.font="10px Arial";s.fillText(A[k].id,C,z-10)}}
+</script>
+</head>
+
+<body onload="n()">
+
+	<div>
+		<textarea readonly id="states" cols="50" rows="10">Use the LOAD button to load a file here. Loading large files might take some time in some browsers, e.g., Chrome!</textarea>
+	</div>
+	<div>
+		<input type="file" id="file" onchange="i(); this.value=null; return false" />
+	</div>
+
+	<hr />
+	<div>
+ 	Steps to execute: <input type="text" id="s" value="0" />
+	</div>
+	<div>
+	Delay (ms) between steps: <input type="text" id="d" value="1" />
+	</div>
+	<div>
+	Current time : <input readonly type="text" id="t" value="" />
+	</div>
+	<hr />
+
+	<button onclick="u()">RESET</button>
+	<button onclick="g()">START</button>
+	<button onclick="m()">STOP</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	Zoom: 
+	<button onclick="I()">IN</button>
+	<button onclick="b()">OUT</button>
+	<button onclick="p()">FIT</button>
+	<hr />
+
+	<canvas id="u" width="500" height="500"style="border: 1px solid #c3c3c3;">Your browser does not support the canvas element.</canvas>
+
+</body>
+</html>
+
